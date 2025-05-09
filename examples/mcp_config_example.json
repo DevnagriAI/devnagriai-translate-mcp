@@ -1,0 +1,13 @@
+{
+  "mcp_servers": {
+    "devnagri-translation": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "devnagri-mcp-translation",
+        "API_KEY=\"your_devnagri_api_key\""
+      ],
+      "transport": "stdio"
+    }
+  }
+}

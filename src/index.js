@@ -8,7 +8,7 @@ import apiClient from './api-client.js';
  */
 const server = new McpServer(
   {
-    name: "Translation Service",
+    name: "Devnagri MCP - Translation Service",
     version: "1.0.0",
     description: "MCP server for translation services with focus on Indic languages"
   },

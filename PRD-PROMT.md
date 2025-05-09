@@ -6,6 +6,9 @@ You Objectives are:
 - understand the requirements of performing translation in indic languages.
 - read through the documentation provided for the existing APIs that are used for translation.
 - find best practices for documentation of this MCP server. 
+- write down the documenation on how to use this mcp server in editors and tools like Claude, GPT, Windsurf, Cursor, etc. in the JSON configuration format as per the mcp server documentation.
+- code should be built with npx compatability so its easier to integrate in AI tools
+- name the MCP server as "Devnagri MCP - Translation Service".
 
 MCP Server Capabilities:
 - Provide base translation to llm for accuracy which llm can use to generate accurate translations in indic languages.
@@ -62,3 +65,14 @@ Maithili - मैथिली	mai
 Dogri - डोगरी	doi
 Malay - Melayu	ms
 Filipino	tl
+
+
+Example of npx based mcp server configuration:
+"@21st-dev/magic": {
+  "command": "npx",
+  "args": [
+    "-y",
+    "@21st-dev/magic@latest",
+    "API_KEY=\"xxxxxxxxxxxxxxxxxxxx\""
+  ]
+}

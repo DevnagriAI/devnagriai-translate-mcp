@@ -1,6 +1,6 @@
-# Translation Service MCP Server
+# Devnagri MCP - Translation Service
 
-A Model Context Protocol (MCP) server for translation services with a focus on Indic languages. This server bridges LLMs and AI applications with the Devnagri translation API, allowing for high-quality translations.
+A Model Context Protocol (MCP) server for translation services with a focus on Indic languages. This server bridges LLMs and AI applications with the Devnagri translation API, allowing for high-quality translations between 35+ languages.
 
 ## Features
 
@@ -31,11 +31,25 @@ The server consists of the following components:
 
 ## Installation
 
+### Using NPX (Recommended)
+
+The simplest way to use this MCP server is through npx, which allows you to run it without installing or cloning the repository:
+
+```bash
+npx devnagri-mcp-translation API_KEY="your_devnagri_api_key"
+```
+
+This is ideal for integration with AI tools like Claude, GPT, Windsurf, and Cursor.
+
+### Manual Installation
+
+If you prefer to install the server locally:
+
 1. Clone the repository:
 
 ```bash
 git clone <repository-url>
-cd translation-mcp-server
+cd devnagri-mcp-translation
 ```
 
 2. Install dependencies:
@@ -49,7 +63,7 @@ npm install
 Create a `.env` file in the root directory with the following content:
 
 ```
-DEVNAGRI_API_KEY=your_api_key_here
+DEVNAGRI_API_KEY=your_devnagri_api_key
 ```
 
 ## Usage
@@ -75,6 +89,10 @@ This MCP server can be used with any MCP client. For example, using the MCP CLI 
 ```bash
 mcp-client --transport stdio -- node src/index.js
 ```
+
+### Integration with AI Tools
+
+For detailed instructions on how to use this MCP server with various AI tools and editors like Claude, GPT, Windsurf, and Cursor, please refer to the [USAGE.md](./USAGE.md) document.
 
 ## API Reference
 
