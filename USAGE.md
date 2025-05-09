@@ -129,15 +129,86 @@ Cursor IDE has built-in support for MCP servers:
 
 ## Using with Other MCP-Compatible Tools
 
-For other tools that support the MCP protocol:
+### Standard JSON Configuration
+
+Most MCP-compatible tools use a standard JSON configuration format. Here's how to add the Devnagri MCP server to your tool's configuration:
+
+```json
+{
+  "mcp_servers": {
+    "devnagri-translation": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "devnagri-mcp-translation@latest",
+        "API_KEY=\"your_devnagri_api_key\""
+      ],
+      "transport": "stdio"
+    }
+  }
+}
+```
+
+### Tool-Specific Configuration Examples
+
+#### Claude Configuration
+
+```json
+{
+  "devnagri-translation": {
+    "command": "npx",
+    "args": [
+      "-y",
+      "devnagri-mcp-translation@latest",
+      "API_KEY=\"your_devnagri_api_key\""
+    ],
+    "transport": "stdio"
+  }
+}
+```
+
+#### Windsurf Configuration
+
+In `~/.codeium/windsurf/mcp_config.json`:
+
+```json
+{
+  "devnagri-translation": {
+    "command": "npx",
+    "args": [
+      "-y",
+      "devnagri-mcp-translation@latest",
+      "API_KEY=\"your_devnagri_api_key\""
+    ]
+  }
+}
+```
+
+#### Cursor Configuration
+
+In Cursor's settings:
+
+```json
+{
+  "tools": {
+    "devnagri-translation": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "devnagri-mcp-translation@latest",
+        "API_KEY=\"your_devnagri_api_key\""
+      ],
+      "transport": "stdio"
+    }
+  }
+}
+```
+
+#### For other tools that support the MCP protocol:
 
 1. Locate the tool's extension or plugin settings
-2. Add a new MCP server or extension
-3. Configure it to use the command:
-   ```
-   npx devnagri-mcp-translation API_KEY="your_devnagri_api_key"
-   ```
-4. Set the transport type to "stdio"
+2. Add the JSON configuration based on the examples above
+3. Adjust the format according to the specific tool's requirements
 
 ## Example Usage Prompts
 
