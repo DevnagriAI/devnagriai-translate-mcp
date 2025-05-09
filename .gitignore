@@ -1,0 +1,27 @@
+# Dependency directories
+node_modules/
+
+# Environment variables
+.env
+
+# Log files
+logs
+*.log
+npm-debug.log*
+
+# Testing
+coverage/
+
+# IDE config
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Build files
+dist/
+build/
+
+# Cache
+.npm
+.eslintcache
