@@ -136,8 +136,6 @@ This MCP server can be used with any MCP client. For example, using the MCP CLI 
 mcp-client --transport stdio -- node src/index.js
 ```
 
-For detailed instructions on how to use this MCP server with various AI tools and editors, please refer to the [USAGE.md](./USAGE.md) document.
-
 ### Integration with AI Tools
 
 #### Windsurf
