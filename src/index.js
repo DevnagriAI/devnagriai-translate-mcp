@@ -1,137 +1,120 @@
+#!/usr/bin/env node
+
+// Import new MCP SDK classes and utilities
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { z } from 'zod';
 import apiClient from './api-client.js';
 
-/**
- * Initialize the MCP Server for Translation Services
- */
-const server = new McpServer(
-  {
-    name: "Devnagri MCP - Translation Service",
-    version: "1.0.0",
-    description: "MCP server for translation services with focus on Indic languages"
+// Setup logging that doesn't interfere with MCP protocol
+const logger = {
+  info: (message) => {
+    process.stderr.write(`[devnagri-translation] [info] ${message}\n`);
   },
-  {
-    capabilities: {
-      logging: {},
-    },
+  error: (message, error) => {
+    process.stderr.write(`[devnagri-translation] [error] ${message} ${error ? JSON.stringify(error) : ''}\n`);
   }
-);
+};
 
 /**
- * Tool: translate
- * Translates text from source language to target language
+ * Initialize the MCP Server for Translation Services using the modern McpServer class
  */
+const server = new McpServer({
+  name: 'Devnagri MCP - Translation Service',
+  version: '1.0.0',
+  description: 'MCP server for translation services with focus on Indic languages'
+});
+
+/**
+ * Register Translation Tools using the simplified tool() method
+ */
+
+// 1. Translate Tool
 server.tool(
-  "translate",
+  'translate',
   {
-    source_text: z.string().min(1).describe("The text to be translated"),
-    source_language: z.string().min(2).max(7).describe("The source language code (e.g., 'en')"),
-    target_language: z.string().min(2).max(7).describe("The target language code (e.g., 'hi')"),
-    translation_type: z.enum(["literal", "base"]).default("literal").describe("Type of translation requested")
+    source_text: z.string().describe('The text to be translated'),
+    source_language: z.string().describe('The source language code (e.g., "en")'),
+    target_language: z.string().describe('The target language code (e.g., "hi")'),
+    translation_type: z.enum(['literal', 'base']).describe('Type of translation requested').default('literal')
   },
-  async ({ source_text, source_language, target_language, translation_type }) => {
+  async ({ source_text, source_language, target_language, translation_type = 'literal' }) => {
     try {
-      console.log(`Translating from ${source_language} to ${target_language}: ${source_text}`);
-      
+      logger.info(`Translating from ${source_language} to ${target_language}`);
+
       // Get the translation
       const translatedText = await apiClient.translate(
         source_text,
         source_language,
         target_language
       );
-      
-      // For 'base' translations, we would implement additional processing 
-      // to optimize for LLM understanding. This is a simplification.
-      // In a production environment, you might have different API endpoints or post-processing
+
       const result = {
         translated_text: translatedText,
         source_language,
         target_language,
         translation_type
       };
-      
+
       return {
-        content: [{ 
-          type: "text", 
+        content: [{
+          type: 'text',
           text: JSON.stringify(result, null, 2)
-        }],
+        }]
       };
     } catch (error) {
-      console.error(`Translation error: ${error.message}`);
-      return {
-        content: [{ 
-          type: "text", 
-          text: JSON.stringify({ error: error.message }, null, 2)
-        }],
-      };
+      logger.error(`Translation error:`, error);
+      throw error;
     }
   }
 );
 
-/**
- * Tool: detect_language
- * Detects the language of the provided text
- */
+// 2. Detect Language Tool
 server.tool(
-  "detect_language",
+  'detect_language',
   {
-    text: z.string().min(1).describe("The text for language detection")
+    text: z.string().describe('The text for language detection')
   },
   async ({ text }) => {
     try {
-      console.log(`Detecting language for: ${text.substring(0, 50)}${text.length > 50 ? '...' : ''}`);
-      
+      logger.info(`Detecting language for text`);
+
       // Detect the language
       const detection = await apiClient.detectLanguage(text);
-      
+
       return {
-        content: [{ 
-          type: "text", 
+        content: [{
+          type: 'text',
           text: JSON.stringify(detection, null, 2)
-        }],
+        }]
       };
     } catch (error) {
-      console.error(`Language detection error: ${error.message}`);
-      return {
-        content: [{ 
-          type: "text", 
-          text: JSON.stringify({ error: error.message }, null, 2)
-        }],
-      };
+      logger.error(`Language detection error:`, error);
+      throw error;
     }
   }
 );
 
-/**
- * Tool: list_supported_languages
- * Returns a list of all supported languages for translation
- */
+// 3. List Supported Languages Tool
 server.tool(
-  "list_supported_languages",
+  'list_supported_languages',
   {},
   async () => {
     try {
-      console.log("Listing supported languages");
-      
+      logger.info('Listing supported languages');
+
       // Get the list of supported languages
       const languages = apiClient.getSupportedLanguages();
-      
+
       return {
-        content: [{ 
-          type: "text", 
+        content: [{
+          type: 'text',
           text: JSON.stringify(languages, null, 2)
-        }],
+        }]
       };
     } catch (error) {
-      console.error(`Error listing languages: ${error.message}`);
-      return {
-        content: [{ 
-          type: "text", 
-          text: JSON.stringify({ error: error.message }, null, 2)
-        }],
-      };
+      logger.error(`Error listing languages:`, error);
+      throw error;
     }
   }
 );
@@ -141,14 +124,15 @@ server.tool(
  */
 async function main() {
   try {
-    console.log("Starting Translation Service MCP Server...");
+    logger.info('Initializing server...');
     const transport = new StdioServerTransport();
     await server.connect(transport);
-    console.log("Server ready and waiting for requests");
+    logger.info('Server started and connected successfully');
   } catch (error) {
-    console.error(`Failed to start server: ${error.message}`);
+    logger.error('Failed to start server:', error);
     process.exit(1);
   }
 }
 
+// Start the server
 main();

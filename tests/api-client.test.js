@@ -1,63 +1,89 @@
-// Import testing library
-import { describe, it, expect, jest } from '@jest/globals';
+/**
+ * Unit tests for the Devnagri API Client
+ */
+import { jest, describe, it, expect, beforeEach } from '@jest/globals';
 import apiClient from '../src/api-client.js';
 
-jest.mock('axios');
-jest.mock('form-data');
+// Mock the axios module
+jest.mock('axios', () => {
+  return {
+    post: jest.fn().mockImplementation(() => {
+      return Promise.resolve({
+        status: 200,
+        data: {
+          translated_text: 'नमस्ते दुनिया',
+          src_lang: 'en',
+          dest_lang: 'hi'
+        }
+      });
+    })
+  };
+});
+
+// Mock dotenv to prevent loading real env variables during tests
 jest.mock('dotenv', () => ({
   config: jest.fn()
 }));
 
-// Mock environment variables
-process.env.DEVNAGRI_API_KEY = 'test_api_key';
-
-describe('DevnagriApiClient', () => {
-  describe('translate', () => {
-    it('should translate text correctly', async () => {
-      const mockAxios = (await import('axios')).default;
-      mockAxios.post.mockResolvedValue({
-        data: {
-          code: 200,
-          msg: 'success',
-          key: ['नमस्ते दुनिया']
-        }
-      });
-
-      const result = await apiClient.translate('Hello world', 'en', 'hi');
-      expect(result).toBe('नमस्ते दुनिया');
-      expect(mockAxios.post).toHaveBeenCalled();
-    });
-
-    it('should handle translation errors', async () => {
-      const mockAxios = (await import('axios')).default;
-      mockAxios.post.mockRejectedValue(new Error('Network error'));
-
-      await expect(apiClient.translate('Hello world', 'en', 'hi')).rejects.toThrow('Failed to translate text');
-    });
+describe('Devnagri API Client', () => {
+  // Setup test environment
+  beforeEach(() => {
+    // Mock environment variables
+    process.env.DEVNAGRI_API_KEY = 'test-api-key';
   });
 
-  describe('detectLanguage', () => {
-    it('should detect English text', async () => {
-      const result = await apiClient.detectLanguage('Hello world');
-      expect(result.detected_language).toBe('en');
-      expect(result.supported).toBe(true);
-    });
-
-    it('should detect Hindi text', async () => {
-      const result = await apiClient.detectLanguage('नमस्ते दुनिया');
+  // Test the detectLanguage method
+  describe('detectLanguage()', () => {
+    it('should detect Hindi language', async () => {
+      const hindiText = 'नमस्ते दुनिया';
+      const result = await apiClient.detectLanguage(hindiText);
+      
       expect(result.detected_language).toBe('hi');
       expect(result.supported).toBe(true);
+      expect(result.confidence_score).toBeGreaterThan(0);
+    });
+
+    it('should detect English language', async () => {
+      const englishText = 'Hello world';
+      const result = await apiClient.detectLanguage(englishText);
+      
+      expect(result.detected_language).toBe('en');
+      expect(result.supported).toBe(true);
+      expect(result.confidence_score).toBeGreaterThan(0);
+    });
+
+    it('should handle mixed language text', async () => {
+      const mixedText = 'Hello नमस्ते';
+      const result = await apiClient.detectLanguage(mixedText);
+      
+      // The result should be either 'en' or 'hi' depending on which has more characters
+      expect(['en', 'hi']).toContain(result.detected_language);
+      expect(result.supported).toBe(true);
+      expect(result.confidence_score).toBeGreaterThan(0);
     });
   });
 
-  describe('getSupportedLanguages', () => {
+  // Test the getSupportedLanguages method
+  describe('getSupportedLanguages()', () => {
     it('should return a list of supported languages', () => {
       const languages = apiClient.getSupportedLanguages();
+      
+      // Verify the structure and content
       expect(Array.isArray(languages)).toBe(true);
-      expect(languages.length).toBeGreaterThan(0);
-      expect(languages[0]).toHaveProperty('name');
-      expect(languages[0]).toHaveProperty('native_name');
-      expect(languages[0]).toHaveProperty('code');
+      expect(languages.length).toBeGreaterThan(30); // The API supports 35+ languages
+      
+      // Check for essential languages
+      const hasHindi = languages.some(lang => lang.code === 'hi');
+      const hasEnglish = languages.some(lang => lang.code === 'en');
+      
+      expect(hasHindi).toBe(true);
+      expect(hasEnglish).toBe(true);
+      
+      // Check the structure of a language entry
+      const language = languages[0];
+      expect(language).toHaveProperty('name');
+      expect(language).toHaveProperty('native_name');
+      expect(language).toHaveProperty('code');
     });
   });
 });

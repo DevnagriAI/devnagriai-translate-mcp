@@ -1,16 +1,16 @@
 {
-  "name": "devnagri-mcp-translation",
+  "name": "@devnagriai/devnagriai-translate-mcp",
   "version": "1.0.0",
-  "description": "MCP server for translation services with focus on Indic languages",
+  "description": "MCP server for translation services with focus on Indic languages, Powered by Devnagri AI",
   "type": "module",
   "main": "src/index.js",
   "bin": {
-    "devnagri-mcp-translation": "./bin/cli.js"
+    "devnagri-mcp-translation": "bin/cli.js"
   },
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
-    "test": "jest",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "lint": "eslint ."
   },
   "publishConfig": {
@@ -22,10 +22,10 @@
     "indic",
     "language"
   ],
-  "author": "",
+  "author": "Mandeep Singh <mesingh90@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^0.4.0",
+    "@modelcontextprotocol/sdk": "^1.11.1",
     "axios": "^1.6.0",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
@@ -36,5 +36,17 @@
     "eslint": "^8.53.0",
     "jest": "^29.7.0",
     "nodemon": "^3.0.1"
-  }
+  },
+  "directories": {
+    "example": "examples",
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DevnagriAI/devnagriai-translate-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/DevnagriAI/devnagriai-translate-mcp/issues"
+  },
+  "homepage": "https://github.com/DevnagriAI/devnagriai-translate-mcp#readme"
 }

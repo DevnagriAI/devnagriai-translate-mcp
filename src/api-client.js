@@ -1,5 +1,4 @@
 import axios from 'axios';
-import FormData from 'form-data';
 import dotenv from 'dotenv';
 
 // Load environment variables
@@ -23,23 +22,24 @@ class DevnagriApiClient {
    */
   async translate(sourceText, sourceLanguage, targetLanguage) {
     try {
-      const formData = new FormData();
-      formData.append('key', API_KEY);
-      formData.append('sentence', sourceText);
-      formData.append('src_lang', sourceLanguage);
-      formData.append('dest_lang', targetLanguage);
+      // Using URLSearchParams instead of FormData for better Node.js compatibility
+      const params = new URLSearchParams();
+      params.append('key', API_KEY);
+      params.append('sentence', sourceText);
+      params.append('src_lang', sourceLanguage);
+      params.append('dest_lang', targetLanguage);
 
-      const response = await axios.post(DEVNAGRI_API_URL, formData, {
+      const response = await axios.post(DEVNAGRI_API_URL, params, {
         headers: {
-          ...formData.getHeaders(),
-        },
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
       });
 
-      if (response.data.code !== 200) {
+      if (response.status !== 200) {
         throw new Error(`Translation failed: ${response.data.msg || 'Unknown error'}`);
       }
 
-      return response.data.key[0];
+      return response.data.translated_text;
     } catch (error) {
       console.error('Translation error:', error.message);
       throw new Error(`Failed to translate text: ${error.message}`);
@@ -56,7 +56,7 @@ class DevnagriApiClient {
   async detectLanguage(text) {
     // This is a simplified language detection function
     // In a real implementation, you would use a proper language detection API
-    
+
     // Map of script patterns to language codes
     const scriptPatterns = [
       { pattern: /[\u0900-\u097F]/g, code: 'hi', name: 'Hindi' },
@@ -139,7 +139,7 @@ class DevnagriApiClient {
       { name: 'Manipuri', native_name: 'ꯃꯅꯤꯄꯨꯔꯤꯗꯥ ꯂꯩꯕꯥ꯫', code: 'mni-Mtei' },
       { name: 'Nepali', native_name: 'नेपाली', code: 'ne' },
       { name: 'Sanskrit', native_name: 'संस्कृत', code: 'sa' },
-      { name: 'Sindhi', native_name: 'سنڌي‎', code: 'sd' },
+      { name: 'Sindhi', native_name: 'سنڌي', code: 'sd' },
       { name: 'Bodo', native_name: 'बड़ो', code: 'bodo' },
       { name: 'Santhali', native_name: 'ᱥᱟᱱᱛᱟᱲᱤ', code: 'snthl' },
       { name: 'Maithili', native_name: 'मैथिली', code: 'mai' },

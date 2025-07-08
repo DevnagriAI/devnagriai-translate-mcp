@@ -25,3 +25,7 @@ build/
 # Cache
 .npm
 .eslintcache
+
+examples
+PRD.md
+PRD-PROMT.md
