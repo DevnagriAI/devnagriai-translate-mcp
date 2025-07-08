@@ -1,6 +1,6 @@
 {
   "name": "@devnagriai/devnagriai-translate-mcp",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "MCP server for translation services with focus on Indic languages, Powered by Devnagri AI",
   "type": "module",
   "main": "src/index.js",
