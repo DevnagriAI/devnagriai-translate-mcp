@@ -4,9 +4,6 @@
   "description": "MCP server for translation services with focus on Indic languages, Powered by Devnagri AI",
   "type": "module",
   "main": "src/index.js",
-  "bin": {
-    "devnagri-mcp-translation": "bin/cli.js"
-  },
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
@@ -38,7 +35,6 @@
     "nodemon": "^3.0.1"
   },
   "directories": {
-    "example": "examples",
     "test": "tests"
   },
   "repository": {
