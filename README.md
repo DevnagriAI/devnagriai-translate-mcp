@@ -1,4 +1,5 @@
 # @devnagriai/devnagriai-translate-mcp
+[![smithery badge](https://smithery.ai/badge/@DevnagriAI/devnagriai-translate-mcp)](https://smithery.ai/server/@DevnagriAI/devnagriai-translate-mcp)
 
 A JavaScript-based Model Context Protocol (MCP) server providing translation, language detection, and supported language listing via Devnagri AI APIs, with a focus on Indic languages.
 
@@ -17,6 +18,7 @@ A JavaScript-based Model Context Protocol (MCP) server providing translation, la
 - [Quick Start](#quick-start)
 - [API Key Procurement](#api-key-procurement)
 - [Installation](#installation)
+  - [Installing via Smithery](#installing-via-smithery)
   - [NPX (Recommended)](#npx-recommended)
   - [Manual Installation](#manual-installation)
 - [Usage](#usage)
@@ -60,6 +62,14 @@ To use the Devnagri Translation API, you need an API key. Follow these steps:
    - Copy the generated API key. Keep it secure and do not share it publicly.
 
 ## Installation
+
+### Installing via Smithery
+
+To install devnagriai-translate-mcp for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@DevnagriAI/devnagriai-translate-mcp):
+
+```bash
+npx -y @smithery/cli install @DevnagriAI/devnagriai-translate-mcp --client claude
+```
 
 ### NPX (Recommended)
 
@@ -165,7 +175,7 @@ In Cursor's settings:
       "command": "npx",
       "args": [
         "@devnagriai/devnagriai-translate-mcp",
-        "API_KEY=\"your_devnagri_api_key\""
+        "API_KEY=\"your_devnagriai_api_key\""
       ],
       "transport": "stdio"
     }
@@ -182,7 +192,7 @@ In Claude Desktop App:
 3. Select "Add from local server"
 4. Enter the following details:
    - Name: Devnagri Translation Service
-   - Command: `npx @devnagriai/devnagriai-translate-mcp API_KEY="your_devnagri_api_key"`
+   - Command: `npx @devnagriai/devnagriai-translate-mcp API_KEY="your_devnagriai_api_key"`
    - Transport: stdio
 
 Or use this configuration:
@@ -193,7 +203,7 @@ Or use this configuration:
     "command": "npx",
     "args": [
       "@devnagriai/devnagriai-translate-mcp",
-      "API_KEY=\"your_devnagri_api_key\""
+      "API_KEY=\"your_devnagriai_api_key\""
     ],
     "transport": "stdio"
   }
